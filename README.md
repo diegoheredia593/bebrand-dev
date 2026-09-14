@@ -27,3 +27,11 @@ Los botones de contacto abren WhatsApp (+593 96 808 1170) o el cliente de correo
 La configuración de enlaces y SEO está preparada para bebrand.dev. Una publicación de vista previa no conecta ni compra ese dominio. Para usarlo como dirección pública será necesario configurar su DNS y alojamiento con acceso del propietario. bebrand.marketing se desarrollará por separado, reutilizando la identidad visual.
 
 La preferencia de tema se guarda en este dispositivo para este dominio. Los dos dominios no comparten automáticamente ese almacenamiento.
+
+## Publicación
+
+El código se mantiene en el repositorio privado `diegoheredia593/bebrand-dev` y la aplicación se despliega como el Worker `bebrand-dev` de Cloudflare. Después de iniciar sesión con Wrangler, `npm run deploy:cloudflare` compila y publica una nueva versión.
+
+URL actual de Cloudflare: https://bebrand-dev.herediadiego963.workers.dev
+
+Para usar `bebrand.dev`, agrega el dominio personalizado al Worker desde Cloudflare y aplica los registros DNS indicados por la plataforma.
