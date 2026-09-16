@@ -11,34 +11,41 @@ export type Project = {
   id: string;
   name: string;
   category: string;
-  type: 'commerce' | 'website' | 'software';
+  visual: 'exclusive' | 'nexmoni' | 'minka' | 'diego' | 'caja';
   summary: string;
-  challenge: string;
-  solution: string;
-  scope: string[];
-  demo: boolean;
-  url?: string;
+  overview: string;
+  features: string[];
+  prototype?: boolean;
+  url: string;
   image?: string;
 };
 
-// Replace these editorial concepts with verified client work when supplied.
-// A real project may supply an image, live URL and demo: false.
 export const projects: Project[] = [
-  { id: 'origen', name: 'Origen', category: 'E-commerce', type: 'commerce', demo: true,
-    summary: 'Una tienda con tanto carácter como su producto.',
-    challenge: 'Explorar cómo una marca de café de especialidad puede expresar su identidad y facilitar la compra en línea.',
-    solution: 'Una propuesta editorial que reúne un catálogo claro, información de origen y una experiencia de compra pensada para móvil.',
-    scope: ['Dirección visual', 'Diseño de tienda', 'Experiencia móvil'] },
-  { id: 'forma', name: 'Forma Studio', category: 'Web corporativa', type: 'website', demo: true,
-    summary: 'Una presencia digital que deja hablar al diseño.',
-    challenge: 'Presentar los servicios y la visión de un estudio creativo sin restarle protagonismo a su trabajo.',
-    solution: 'Una web de navegación sencilla, tipografía expresiva y una estructura que conecta proyectos, servicios y contacto.',
-    scope: ['Estrategia de contenido', 'Diseño web', 'Portafolio'] },
-  { id: 'nexo', name: 'Nexo', category: 'Software a medida', type: 'software', demo: true,
-    summary: 'Menos tareas dispersas. Más claridad para tu equipo.',
-    challenge: 'Reunir el seguimiento de proyectos y las tareas de un equipo en una sola interfaz.',
-    solution: 'Una propuesta de panel de trabajo con estados visibles, prioridades claras y una visión compartida de cada proyecto.',
-    scope: ['Diseño de producto', 'Panel de gestión', 'Flujos de trabajo'] },
+  { id: 'el-exclusivo', name: 'El Exclusivo', category: 'Catálogo corporativo', visual: 'exclusive',
+    summary: 'Uniformes, prendas personalizadas y souvenirs para llevar una marca más lejos.',
+    overview: 'Una experiencia comercial que presenta productos personalizados para empresas y facilita explorar las opciones de la marca.',
+    features: ['Catálogo de productos', 'Identidad de marca', 'Diseño responsive'],
+    url: 'https://triple-aaa-web.herediadiego963.workers.dev/', image: '/portfolio/el-exclusivo.webp' },
+  { id: 'nexmoni', name: 'NexMoni', category: 'Web de servicios', visual: 'nexmoni',
+    summary: 'Una web para explicar servicios financieros entre Europa y Latinoamérica.',
+    overview: 'El sitio organiza la propuesta de NexMoni en torno a una cuenta en euros, transferencias internacionales e información de precios.',
+    features: ['Contenido multilingüe', 'Servicios y tarifas', 'Experiencia responsive'],
+    url: 'https://nexmoni-rediseno.herediadiego963.workers.dev/es' },
+  { id: 'minka', name: 'Minka', category: 'Plataforma digital', visual: 'minka',
+    summary: 'Gestión de urbanizaciones, residentes y tareas en un solo lugar.',
+    overview: 'Minka presenta una plataforma para administrar urbanizaciones, condominios y edificios en Ecuador, con herramientas para comunicación, reservas y cobranzas.',
+    features: ['Software de gestión', 'Experiencia para residentes', 'Demostración interactiva'],
+    url: 'https://appminka.com/', image: '/portfolio/minka.png' },
+  { id: 'dr-diego-lucas', name: 'Dr. Diego Lucas', category: 'Sitio editorial', visual: 'diego',
+    summary: 'Un espacio digital para artículos, reflexión y conocimiento médico.',
+    overview: 'Un sitio personal que reúne artículos sobre salud, investigación y tecnología con una lectura clara y una navegación sencilla.',
+    features: ['Artículos', 'Marca personal', 'Diseño editorial'],
+    url: 'https://drdiegolucas.com/', image: '/portfolio/dr-diego-lucas.jpg' },
+  { id: 'caja-5-octubre', name: 'Caja 5 de Octubre', category: 'Prototipo web', visual: 'caja', prototype: true,
+    summary: 'Un prototipo para explorar ahorro, crédito y simulación de cuotas.',
+    overview: 'Experiencia demostrativa de una caja de ahorro y crédito, con presentación de servicios y un simulador de crédito de valores ilustrativos.',
+    features: ['Prototipo visual', 'Simulador demostrativo', 'Diseño responsive'],
+    url: 'https://nexmoni-caja-5-octubre.herediadiego963.workers.dev/' },
 ];
 
 export const services = [

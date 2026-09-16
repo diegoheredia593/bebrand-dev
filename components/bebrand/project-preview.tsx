@@ -1,11 +1,25 @@
-import { ArrowUpRight, Search, Plus, LayoutGrid, Check, MoreHorizontal } from 'lucide-react';
 import type { Project } from '@/lib/bebrand-content';
 
 export function ProjectPreview({ project }: { project: Project }) {
-  if (project.image) return <div className="project-visual"><img src={project.image} alt={`Vista del proyecto ${project.name}`} loading="lazy" width="900" height="620" /></div>;
-  if (project.type === 'commerce') return <div className="project-visual coffee-preview" aria-label="Concepto de diseño para una tienda de café Origen">
-    <div className="coffee-window"><div className="mock-nav"><strong>origen.</strong><span>El café &nbsp; Nuestra historia</span><span>Bolsa (0)</span></div><div className="coffee-content"><span className="mock-eyebrow">CAFÉ DE ESPECIALIDAD / ECUADOR</span><div className="coffee-title">Todo empieza<br/>en el <i>origen.</i></div><p>Pequeños lotes. Grandes historias.<br/>Café que merece una pausa.</p><span className="mock-cta">Encuentra tu café <ArrowUpRight size={12}/></span></div><div className="coffee-bottom"><span>DE LA TIERRA A TU TAZA</span><span>100% ARÁBICA</span></div></div>
+  if (project.image) {
+    return <div className={`project-visual showcase-visual showcase-${project.visual}`}>
+      <img src={project.image} alt={`Imagen del sitio ${project.name}`} loading="lazy" width="1200" height="750" />
+    </div>;
+  }
+
+  if (project.visual === 'nexmoni') {
+    return <div className="project-visual showcase-visual showcase-nexmoni" aria-label="Representación visual del sitio NexMoni">
+      <div className="showcase-window"><div className="showcase-nav"><strong>nexmoni<span>.</span></strong><span>Cuenta · Envíos · Precios</span></div>
+        <div className="showcase-copy"><span>EUROPA ↔ LATINOAMÉRICA</span><strong>Tu vida está en dos países.<br/>Tu cuenta también.</strong><small>Una cuenta para moverte entre dos mundos.</small></div>
+        <div className="showcase-card"><span>CUENTA EUROPEA</span><strong>€</strong></div>
+      </div>
+    </div>;
+  }
+
+  return <div className="project-visual showcase-visual showcase-caja" aria-label="Representación visual del prototipo Caja 5 de Octubre">
+    <div className="showcase-window"><div className="showcase-nav"><strong>5 DE OCTUBRE</strong><span>AHORRO · CRÉDITO</span></div>
+      <div className="showcase-copy"><span>PROTOTIPO DEMOSTRATIVO</span><strong>El impulso para<br/>hacerlo posible.</strong><small>Explora opciones de ahorro y crédito.</small></div>
+      <div className="showcase-card"><span>SIMULADOR DE CRÉDITO</span><strong>↗</strong></div>
+    </div>
   </div>;
-  if (project.type === 'website') return <div className="project-visual studio-preview" aria-label="Concepto de diseño para la web Forma Studio"><div className="studio-window"><div className="mock-nav"><strong>forma®</strong><span>Estudio &nbsp; Proyectos &nbsp; Contacto</span></div><div className="studio-center"><span className="mock-eyebrow">ESTUDIO INDEPENDIENTE DE DISEÑO</span><div>Ideas claras.<br/><i>Buenas formas.</i></div><span className="studio-description">Diseñamos espacios para nuevas perspectivas.</span></div><div className="studio-bottom"><span>DISEÑO CON INTENCIÓN.</span><ArrowUpRight size={30}/></div></div></div>;
-  return <div className="project-visual software-preview" aria-label="Concepto de interfaz de gestión Nexo"><div className="software-window"><aside><strong>nexo<span>✳</span></strong><div className="mini-active"><LayoutGrid size={12}/> Proyectos</div><div>Mi equipo</div><div>Calendario</div></aside><div className="software-main"><div className="software-top"><span>Espacio de trabajo</span><span><Search size={12}/><span className="mock-avatar">A</span></span></div><div className="software-title"><div><small>¡Todo listo para avanzar!</small><h3>Tus proyectos</h3></div><span className="new-project"><Plus size={11}/> Nuevo</span></div><div className="software-stats"><div><span>En progreso</span><strong>04</strong></div><div><span>Completados</span><strong>12</strong></div></div><div className="task-row"><span className="task-icon"><Check size={12}/></span><div>Rediseño de marca<small>Diseño · En progreso</small></div><MoreHorizontal size={14}/></div><div className="task-row"><span className="task-icon"><LayoutGrid size={12}/></span><div>Nueva tienda online<small>Desarrollo · En revisión</small></div><MoreHorizontal size={14}/></div></div></div></div>;
 }

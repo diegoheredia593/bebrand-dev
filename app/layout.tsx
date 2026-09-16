@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Páginas web, e-commerce y software a medida. Tu siguiente etapa, la desarrollamos. BeBrand Desarrollo.",
   metadataBase: new URL("https://bebrand.dev"),
   alternates: { canonical: "https://bebrand.dev" },
-  openGraph: { title: "BeBrand — Tu siguiente etapa. La desarrollamos.", description: "Desarrollo web, e-commerce y software a medida para tu negocio.", locale: "es_CO", type: "website", url: "https://bebrand.dev" },
+  openGraph: { title: "BeBrand — Tu siguiente etapa. La desarrollamos.", description: "Desarrollo web, e-commerce y software a medida para tu negocio.", locale: "es_EC", type: "website", url: "https://bebrand.dev" },
   other: {
     "codex-preview": "development",
   },
