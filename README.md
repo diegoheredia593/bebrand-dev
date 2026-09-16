@@ -15,7 +15,7 @@ Requiere Node 22.13 o superior. Ejecutar `npm run install:ci`, después `npm run
 - `lib/bebrand-content.ts`: contacto, dominios, servicios, proceso y proyectos.
 - `components/bebrand/`: secciones y vistas previas del portafolio.
 - `app/globals.css`: diseño, temas azul/blanco y reglas responsive.
-- `public/brand/logo-original.jpeg`: logo suministrado sin modificar.
+- `public/brand/`: versiones oficiales del logo suministradas por el propietario. El encabezado y el pie cambian automáticamente entre los PNG transparentes blancos y azules según el tema; el monograma cuadrado se usa como icono del navegador.
 - `app/layout.tsx`: metadatos y canonical de bebrand.dev.
 - `app/servicios/page.tsx` y `lib/services-detail-content.ts`: página independiente de servicios y su contenido.
 

@@ -44,7 +44,7 @@ export function SiteHeader({ home = false }: { home?: boolean }) {
   return <>
     <a href="#contenido" className="skip-link">Saltar al contenido</a>
     <header className="site-header container">
-      <a href={home ? '#inicio' : '/'} className="brand" aria-label="BeBrand Desarrollo, inicio"><img src="/brand/logo-original.jpeg" alt="" width="62" height="62" /><span>bebrand<span className="brand-extension">.dev</span><small>DISEÑO + TECNOLOGÍA</small></span></a>
+      <a href={home ? '#inicio' : '/'} className="brand brand-lockup" aria-label="BeBrand Desarrollo, inicio"><span className="brand-images" aria-hidden="true"><img className="brand-on-blue" src="/brand/bebrand-dev-white.png" alt="" width="1782" height="276"/><img className="brand-on-light" src="/brand/bebrand-dev-blue.png" alt="" width="1871" height="272"/></span><small>DISEÑO + TECNOLOGÍA</small></a>
       <nav className="desktop-nav" aria-label="Navegación principal">{links.map(link => <a key={link.label} href={link.href} aria-current={link.current ? 'page' : undefined}>{link.label}</a>)}</nav>
       <div className="header-actions"><label className="theme-control"><span>{light ? 'Blanco' : 'Azul'}</span><Switch checked={light} onCheckedChange={changeTheme} aria-label="Usar fondo blanco" className="brand-switch" /></label><a href={contactHref} className="header-contact">Hablemos <ArrowUpRight size={16}/></a><button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menuOpen} aria-controls="mobile-nav">{menuOpen ? <X/> : <Menu/>}</button></div>
     </header>
