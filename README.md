@@ -17,6 +17,7 @@ Requiere Node 22.13 o superior. Ejecutar `npm run install:ci`, después `npm run
 - `app/globals.css`: diseño, temas azul/blanco y reglas responsive.
 - `public/brand/logo-original.jpeg`: logo suministrado sin modificar.
 - `app/layout.tsx`: metadatos y canonical de bebrand.dev.
+- `app/servicios/page.tsx` y `lib/services-detail-content.ts`: página independiente de servicios y su contenido.
 
 El portafolio enlaza a cinco sitios: El Exclusivo, NexMoni, Minka, Dr. Diego Lucas y Caja 5 de Octubre. Este último se identifica como prototipo demostrativo, igual que en el sitio enlazado. Las imágenes locales provienen de los sitios respectivos; las vistas de NexMoni y Caja 5 de Octubre son representaciones editoriales, no capturas de pantalla. Para agregar un proyecto, edita `projects` en `lib/bebrand-content.ts` e incorpora su imagen en `public/portfolio/` si corresponde.
 
@@ -33,5 +34,7 @@ La preferencia de tema se guarda en este dispositivo para este dominio. Los dos 
 El código se mantiene en el repositorio privado `diegoheredia593/bebrand-dev` y la aplicación se despliega como el Worker `bebrand-dev` de Cloudflare. Después de iniciar sesión con Wrangler, `npm run deploy:cloudflare` compila y publica una nueva versión.
 
 URL actual de Cloudflare: https://bebrand-dev.herediadiego963.workers.dev
+
+La página detallada de servicios está disponible en `/servicios`. Incluye web y e-commerce (con opción de integración con Datafast según los requisitos del comercio), apps y software, UI/UX, SEO/GEO e integraciones. El resumen de la portada y el menú enlazan a esta ruta.
 
 Para usar `bebrand.dev`, agrega el dominio personalizado al Worker desde Cloudflare y aplica los registros DNS indicados por la plataforma.
