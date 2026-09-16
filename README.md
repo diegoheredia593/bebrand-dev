@@ -13,12 +13,12 @@ Requiere Node 22.13 o superior. Ejecutar `npm run install:ci`, después `npm run
 ## Editar contenido
 
 - `lib/bebrand-content.ts`: contacto, dominios, servicios, proceso y proyectos.
-- `components/bebrand/`: secciones y representaciones visuales de los conceptos.
+- `components/bebrand/`: secciones y vistas previas del portafolio.
 - `app/globals.css`: diseño, temas azul/blanco y reglas responsive.
 - `public/brand/logo-original.jpeg`: logo suministrado sin modificar.
 - `app/layout.tsx`: metadatos y canonical de bebrand.dev.
 
-Los tres proyectos iniciales son **conceptos ilustrativos**, no trabajos para clientes. Para sustituirlos, introducir nombre, descripción, alcance, imagen local y URL verificada; cambiar `demo` a `false`. No se han inventado testimonios, clientes ni resultados.
+El portafolio enlaza a cinco sitios: El Exclusivo, NexMoni, Minka, Dr. Diego Lucas y Caja 5 de Octubre. Este último se identifica como prototipo demostrativo, igual que en el sitio enlazado. Las imágenes locales provienen de los sitios respectivos; las vistas de NexMoni y Caja 5 de Octubre son representaciones editoriales, no capturas de pantalla. Para agregar un proyecto, edita `projects` en `lib/bebrand-content.ts` e incorpora su imagen en `public/portfolio/` si corresponde.
 
 Los botones de contacto abren WhatsApp (+593 96 808 1170) o el cliente de correo. No hay formulario ni base de datos. No se envían mensajes automáticamente.
 
