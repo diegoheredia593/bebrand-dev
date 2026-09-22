@@ -6,12 +6,13 @@ import { Portfolio } from './portfolio';
 import { Services } from './services';
 import { Process } from './process';
 import { Contact } from './contact';
+import { brand } from '@/lib/bebrand-content';
 
 export function DevelopmentSite() {
   return <div className="site">
     <SiteHeader home />
     <main id="contenido"><section className="hero container" id="inicio">
-      <div className="hero-top"><span className="eyebrow">ESTUDIO DE DESARROLLO DIGITAL</span><a className="sister-link" href="https://bebrand.marketing">¿Buscas marketing? <ArrowUpRight size={15}/></a></div>
+      <div className="hero-top"><span className="eyebrow">ESTUDIO DE DESARROLLO DIGITAL</span><a className="sister-link" href={brand.marketingUrl}>¿Buscas marketing? <ArrowUpRight size={15}/></a></div>
       <div className="hero-split">
         <div className="hero-copy">
           <h1>Tu siguiente etapa.<br/><span>La desarrollamos.</span></h1>

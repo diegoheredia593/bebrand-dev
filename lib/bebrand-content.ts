@@ -1,7 +1,12 @@
 export const brand = {
   name: 'BeBrand',
   developmentUrl: 'https://bebrand.dev',
-  marketingUrl: 'https://bebrand.marketing',
+  // TODO: switch to https://bebrand.marketing once that custom domain is
+  // connected to the bebrand-marketing Worker (same still-pending step as
+  // bebrand.dev's own custom domain — see HANDOFF.md). Until then this
+  // points at the real, live workers.dev URL so the cross-link actually
+  // resolves instead of a dead custom domain.
+  marketingUrl: 'https://bebrand-marketing.herediadiego963.workers.dev',
   email: 'herediadiego963@gmail.com',
   phone: '+593 96 808 1170',
   whatsapp: 'https://wa.me/593968081170?text=Hola%20BeBrand%2C%20quiero%20conversar%20sobre%20un%20proyecto%20digital.',
