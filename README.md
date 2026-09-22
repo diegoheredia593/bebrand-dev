@@ -2,6 +2,8 @@
 
 Sitio de la agencia de desarrollo de software y web. Dominio previsto: **https://bebrand.dev**. La segunda división enlaza a **https://bebrand.marketing**.
 
+Para retomar el proyecto en una nueva sesión, leer primero [`HANDOFF.md`](./HANDOFF.md). Incluye arquitectura, decisiones, rutas editables, validación, Git y publicación en Cloudflare.
+
 ## Stack
 
 React 19, TypeScript, estructura App Router compatible con Next.js sobre Vinext/Vite, Tailwind CSS 4 y componentes accesibles Radix/shadcn. Los componentes propios están separados por sección. Las animaciones actuales usan CSS y respetan `prefers-reduced-motion`; se pueden incorporar Motion, GSAP y otras bibliotecas React en futuras iteraciones.
@@ -13,12 +15,13 @@ Requiere Node 22.13 o superior. Ejecutar `npm run install:ci`, después `npm run
 ## Editar contenido
 
 - `lib/bebrand-content.ts`: contacto, dominios, servicios, proceso y proyectos.
-- `components/bebrand/`: secciones y representaciones visuales de los conceptos.
+- `components/bebrand/`: secciones y vistas previas del portafolio.
 - `app/globals.css`: diseño, temas azul/blanco y reglas responsive.
-- `public/brand/logo-original.jpeg`: logo suministrado sin modificar.
+- `public/brand/`: versiones oficiales del logo suministradas por el propietario. El encabezado y el pie cambian automáticamente entre los PNG transparentes blancos y azules según el tema; el monograma cuadrado se usa como icono del navegador.
 - `app/layout.tsx`: metadatos y canonical de bebrand.dev.
+- `app/servicios/page.tsx` y `lib/services-detail-content.ts`: página independiente de servicios y su contenido.
 
-Los tres proyectos iniciales son **conceptos ilustrativos**, no trabajos para clientes. Para sustituirlos, introducir nombre, descripción, alcance, imagen local y URL verificada; cambiar `demo` a `false`. No se han inventado testimonios, clientes ni resultados.
+El portafolio enlaza a cinco sitios: El Exclusivo, NexMoni, Minka, Dr. Diego Lucas y Caja 5 de Octubre. Este último se identifica como prototipo demostrativo, igual que en el sitio enlazado. Las imágenes locales provienen de los sitios respectivos; las vistas de NexMoni y Caja 5 de Octubre son representaciones editoriales, no capturas de pantalla. Para agregar un proyecto, edita `projects` en `lib/bebrand-content.ts` e incorpora su imagen en `public/portfolio/` si corresponde.
 
 Los botones de contacto abren WhatsApp (+593 96 808 1170) o el cliente de correo. No hay formulario ni base de datos. No se envían mensajes automáticamente.
 
@@ -33,5 +36,7 @@ La preferencia de tema se guarda en este dispositivo para este dominio. Los dos 
 El código se mantiene en el repositorio privado `diegoheredia593/bebrand-dev` y la aplicación se despliega como el Worker `bebrand-dev` de Cloudflare. Después de iniciar sesión con Wrangler, `npm run deploy:cloudflare` compila y publica una nueva versión.
 
 URL actual de Cloudflare: https://bebrand-dev.herediadiego963.workers.dev
+
+La página detallada de servicios está disponible en `/servicios`. Incluye web y e-commerce (con opción de integración con Datafast según los requisitos del comercio), apps y software, UI/UX, SEO/GEO e integraciones. El resumen de la portada y el menú enlazan a esta ruta.
 
 Para usar `bebrand.dev`, agrega el dominio personalizado al Worker desde Cloudflare y aplica los registros DNS indicados por la plataforma.
