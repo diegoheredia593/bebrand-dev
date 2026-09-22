@@ -39,7 +39,7 @@ export function SiteHeader({ home = false }: { home?: boolean }) {
     { href: '/servicios', label: 'Servicios', current: !home },
     { href: home ? '#proceso' : '/#proceso', label: 'Cómo trabajamos' },
   ];
-  const contactHref = '#contacto';
+  const contactHref = '/proyecto';
 
   return <>
     <a href="#contenido" className="skip-link">Saltar al contenido</a>

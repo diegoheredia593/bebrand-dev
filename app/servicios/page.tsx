@@ -18,7 +18,7 @@ export default function ServicesPage() {
     <section className="detail-hero container" id="inicio">
       <div className="detail-hero-top"><span className="eyebrow">SERVICIOS / BEBRAND.DEV</span><span className="eyebrow">ESTRATEGIA · DISEÑO · TECNOLOGÍA</span></div>
       <h1>Tecnología que se adapta<br/><em>a lo que quieres construir.</em></h1>
-      <div className="detail-hero-bottom"><p>De la primera idea al lanzamiento: diseñamos, desarrollamos y conectamos experiencias digitales con un propósito claro.</p><div><a className="pill primary" href="#explorar">Explorar servicios <ArrowDown size={17}/></a><a className="detail-hero-link" href="#contacto">Cuéntanos tu proyecto <ArrowUpRight size={17}/></a></div></div>
+      <div className="detail-hero-bottom"><p>De la primera idea al lanzamiento: diseñamos, desarrollamos y conectamos experiencias digitales con un propósito claro.</p><div><a className="pill primary" href="#explorar">Explorar servicios <ArrowDown size={17}/></a><a className="detail-hero-link" href="/proyecto">Cuéntanos tu proyecto <ArrowUpRight size={17}/></a></div></div>
       <div className="detail-hero-strip"><span>01 — 05 / LO QUE PODEMOS CREAR</span><span>HECHO A LA MEDIDA DE TU SIGUIENTE ETAPA</span></div>
     </section>
 
@@ -35,7 +35,7 @@ export default function ServicesPage() {
       </section>)}</div>
     </div>
 
-    <section className="detail-ending"><div className="container detail-ending-inner"><span className="eyebrow">EL PUNTO DE PARTIDA</span><h2>No necesitas saber<br/><em>qué servicio pedir.</em></h2><div><p>Cuéntanos qué quieres lograr, qué te está frenando y para quién estás construyendo. Te ayudamos a definir el alcance adecuado.</p><a href={brand.whatsapp} target="_blank" rel="noopener noreferrer" className="pill primary">Conversemos sobre tu idea <ArrowUpRight size={18}/></a></div></div></section>
+    <section className="detail-ending"><div className="container detail-ending-inner"><span className="eyebrow">EL PUNTO DE PARTIDA</span><h2>No necesitas saber<br/><em>qué servicio pedir.</em></h2><div><p>Cuéntanos qué quieres lograr, qué te está frenando y para quién estás construyendo. Te ayudamos a definir el alcance adecuado.</p><a href="/proyecto" className="pill primary">Cuéntanos tu proyecto <ArrowUpRight size={18}/></a><a href={brand.whatsapp} target="_blank" rel="noopener noreferrer" className="detail-hero-link">o escríbenos directo por WhatsApp <ArrowUpRight size={17}/></a></div></div></section>
     <Contact/>
   </main></div>;
 }
