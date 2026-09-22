@@ -2,6 +2,8 @@
 
 Sitio de la agencia de desarrollo de software y web. Dominio previsto: **https://bebrand.dev**. La segunda división enlaza a **https://bebrand.marketing**.
 
+Para retomar el proyecto en una nueva sesión, leer primero [`HANDOFF.md`](./HANDOFF.md). Incluye arquitectura, decisiones, rutas editables, validación, Git y publicación en Cloudflare.
+
 ## Stack
 
 React 19, TypeScript, estructura App Router compatible con Next.js sobre Vinext/Vite, Tailwind CSS 4 y componentes accesibles Radix/shadcn. Los componentes propios están separados por sección. Las animaciones actuales usan CSS y respetan `prefers-reduced-motion`; se pueden incorporar Motion, GSAP y otras bibliotecas React en futuras iteraciones.
