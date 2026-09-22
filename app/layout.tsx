@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Fraunces } from "next/font/google";
+import { ScrollProgress } from "@/components/ui/scroll-progress";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -39,7 +40,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${manrope.variable} ${fraunces.variable}`}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <ScrollProgress />
+        {children}
+      </body>
     </html>
   );
 }
