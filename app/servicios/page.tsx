@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ArrowDown, ArrowUpRight, Check } from 'lucide-react';
 import { SiteHeader } from '@/components/bebrand/site-header';
+import KineticGrid from '@/components/ui/kinetic-grid';
 import { ServiceArtwork } from '@/components/bebrand/service-artwork';
 import { Contact } from '@/components/bebrand/contact';
 import { detailedServices } from '@/lib/services-detail-content';
@@ -35,7 +36,7 @@ export default function ServicesPage() {
       </section>)}</div>
     </div>
 
-    <section className="detail-ending"><div className="container detail-ending-inner"><span className="eyebrow">EL PUNTO DE PARTIDA</span><h2>No necesitas saber<br/><em>qué servicio pedir.</em></h2><div><p>Cuéntanos qué quieres lograr, qué te está frenando y para quién estás construyendo. Te ayudamos a definir el alcance adecuado.</p><a href="/proyecto" className="pill primary">Cuéntanos tu proyecto <ArrowUpRight size={18}/></a><a href={brand.whatsapp} target="_blank" rel="noopener noreferrer" className="detail-hero-link">o escríbenos directo por WhatsApp <ArrowUpRight size={17}/></a></div></div></section>
+    <KineticGrid as="section" className="detail-ending" globalColor="monochrome"><div className="container detail-ending-inner"><span className="eyebrow">EL PUNTO DE PARTIDA</span><h2>No necesitas saber<br/><em>qué servicio pedir.</em></h2><div><p>Cuéntanos qué quieres lograr, qué te está frenando y para quién estás construyendo. Te ayudamos a definir el alcance adecuado.</p><a href="/proyecto" className="pill primary">Cuéntanos tu proyecto <ArrowUpRight size={18}/></a><a href={brand.whatsapp} target="_blank" rel="noopener noreferrer" className="detail-hero-link">o escríbenos directo por WhatsApp <ArrowUpRight size={17}/></a></div></div></KineticGrid>
     <Contact/>
   </main></div>;
 }
