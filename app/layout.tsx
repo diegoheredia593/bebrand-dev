@@ -38,8 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${manrope.variable} ${fraunces.variable}`}>
-      <head><script dangerouslySetInnerHTML={{ __html: "try{document.documentElement.dataset.theme=localStorage.getItem('bebrand-theme')==='light'?'light':'blue'}catch{}" }} /></head>
+    <html lang="es" className={`${manrope.variable} ${fraunces.variable}`}>
       <body className="antialiased">{children}</body>
     </html>
   );
