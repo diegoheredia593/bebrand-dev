@@ -1,6 +1,6 @@
 # Handoff — bebrand.dev
 
-Última actualización de este documento: **22 de septiembre de 2026**.
+Última actualización de este documento: **22 de septiembre de 2026** (formulario de proyecto + Cloudflare D1).
 
 Este documento reúne el contexto necesario para continuar desarrollando, revisando y publicando la web de BeBrand Desarrollo sin volver a reconstruir decisiones ya tomadas.
 
@@ -11,12 +11,13 @@ Este documento reúne el contexto necesario para continuar desarrollando, revisa
 - **Dominio previsto:** <https://bebrand.dev>.
 - **URL pública actual:** <https://bebrand-dev.herediadiego963.workers.dev>.
 - **Página de servicios:** <https://bebrand-dev.herediadiego963.workers.dev/servicios>.
+- **Formulario conversacional de proyecto:** <https://bebrand-dev.herediadiego963.workers.dev/proyecto> — ver sección 4B.
 - **Repositorio privado:** <https://github.com/diegoheredia593/bebrand-dev>.
 - **Worker de Cloudflare:** `bebrand-dev`.
+- **Base de datos Cloudflare D1:** `bebrand-dev-leads` (`e7a75a0a-bbf9-4224-83a5-ae654ff1c68f`), cuenta `herediadiego963@gmail.com` (`84ffa5d2db10e557297317693d5ae3bf`), vinculada como binding `DB`.
 - **Rama de trabajo y publicación actual:** `redesign/hero-cta-project-focus`.
-- **Último commit al redactar este handoff:** `4e8f40b` — `Use supplied BeBrand logos across themes`.
-- **Última versión de Cloudflare verificada:** `91831005-de54-4cd7-97d9-d8d11b7fc65e`.
-- **Estado local al redactar este documento:** limpio y sincronizado con la rama remota, antes de agregar este archivo.
+- **Último commit al redactar este handoff:** `b384118` — `Add conversational project-intake form with autosave to Cloudflare D1`.
+- **Estado local al redactar este documento:** limpio y sincronizado con la rama remota, antes de actualizar este archivo.
 
 El dominio personalizado `bebrand.dev` todavía debe conectarse al Worker desde la cuenta de Cloudflare y mediante DNS. La web pública funcional usa por ahora el subdominio `workers.dev` indicado arriba.
 
@@ -66,14 +67,53 @@ Principios ya aplicados:
 
 No hay actualmente:
 
-- Base de datos utilizada por esta web.
-- Formulario con backend.
 - CMS.
 - Autenticación.
 - Analítica configurada.
 - Integración real con Datafast.
 
-Los contactos abren WhatsApp o el cliente de correo del visitante.
+Desde esta iteración **sí existe** un backend real: Cloudflare D1 (vía Drizzle ORM) para el formulario conversacional de `/proyecto`. Ver sección 4B para el detalle completo.
+
+Los contactos directos (WhatsApp/correo) del resto del sitio siguen abriendo el cliente del visitante sin backend — eso no cambió.
+
+## 4B. Formulario conversacional de proyecto (`/proyecto`) y Cloudflare D1
+
+**Por qué existe:** en vez de un formulario largo de una sola pantalla, `/proyecto` es un wizard de 8 pasos. El paso 0 (contacto: nombre/correo/teléfono/empresa) crea el lead en la base de datos en cuanto el visitante lo completa — así, aunque abandone el resto del formulario, ya queda un contacto real para dar seguimiento por teléfono. Cada paso siguiente hace autosave (`PATCH`) al avanzar, y además hay un flush best-effort vía `navigator.sendBeacon` cuando el visitante cierra la pestaña o cambia de foco a medio paso (incluso si nunca hizo clic en "Siguiente").
+
+**Base de datos:** Cloudflare D1, base `bebrand-dev-leads` (id `e7a75a0a-bbf9-4224-83a5-ae654ff1c68f`), cuenta `herediadiego963@gmail.com`. Una sola tabla, `leads`:
+
+- `public_id` (UUID, único) — el único identificador que el navegador conoce (se guarda en `localStorage['bebrand-lead-id']`); el `id` numérico interno nunca se expone.
+- `status` (`in_progress` / `completed`), `current_step`.
+- Contacto: `name`, `email`, `phone`, `company`.
+- Columnas dedicadas para triage rápido sin parsear JSON: `project_types`, `main_goal`, `budget_range`, `timeline`, `preferred_contact_method`.
+- `answers_json` — snapshot completo de **todas** las respuestas (incluidas las que no tienen columna dedicada), es la fuente de verdad para reanudar el formulario.
+- `created_at`, `updated_at`.
+
+Consultar leads manualmente (Cloudflare Dashboard → Workers & Pages → D1 → `bebrand-dev-leads` → Console, o vía Wrangler/MCP):
+
+```sql
+SELECT public_id, status, name, email, phone, company, project_types, main_goal, budget_range, timeline, preferred_contact_method, created_at
+FROM leads ORDER BY created_at DESC;
+```
+
+**API** (`app/api/leads/`, capa Drizzle en `db/index.ts` + `db/schema.ts`):
+
+- `POST /api/leads` — crea el lead (paso 0). Valida nombre/correo/teléfono, rechaza silenciosamente si el campo honeypot oculto (`website`) viene lleno (anti-spam básico, sin dependencias nuevas).
+- `GET /api/leads/{publicId}` — usado para reanudar una sesión (recupera `status`, `currentStep`, `answers`).
+- `PATCH /api/leads/{publicId}` — autosave de un paso: recibe `{ step, patch, completed? }`, mezcla `patch` dentro de `answers_json`, actualiza las columnas dedicadas que apliquen y `current_step`.
+- `POST /api/leads/{publicId}` — alias idéntico a `PATCH`, existe porque `navigator.sendBeacon` solo puede hacer `POST` (lo usa el flush de cierre de pestaña).
+
+**Preguntas del formulario:** la lista completa (contenido, tipo de campo, condicionales) vive en `lib/project-form-steps.ts` — es la única fuente de verdad; el wizard (`components/bebrand/project-form/`) es puramente declarativo a partir de ese archivo. Para agregar/quitar/reordenar preguntas, editar solo ese archivo (y, si una pregunta nueva necesita triage rápido en su propia columna, sumarla a `DEDICATED_ANSWER_KEYS` en `lib/leads.ts` + a `db/schema.ts` + generar y aplicar la migración, ver abajo).
+
+**Cómo modificar el esquema de la tabla `leads`:**
+
+1. Editar `db/schema.ts`.
+2. `npm run db:generate` (genera un nuevo archivo en `drizzle/`).
+3. Aplicar ese SQL contra la base real (no hay Wrangler/Docker local con D1 vinculado en este equipo — se aplicó la migración inicial directamente vía las herramientas MCP de Cloudflare; usar el mismo camino, o `wrangler d1 execute bebrand-dev-leads --remote --file=drizzle/XXXX.sql` si hay sesión de Wrangler con acceso a D1).
+
+**Detalle de despliegue — por qué `deploy:cloudflare` tiene un paso extra:** el build de Vinext siempre escribe el binding de D1 en `dist/server/wrangler.json` usando un **id de base de datos placeholder** (`00000000-0000-4000-8000-000000000000`, ver `vite.config.ts` — pensado para una plataforma de control externa que este proyecto no usa). `scripts/apply-d1-binding.mjs` reescribe ese archivo después del build con el binding real (`DB` → `bebrand-dev-leads` → el id real). `package.json`'s `deploy:cloudflare` ya encadena `build && node scripts/apply-d1-binding.mjs && wrangler deploy ...` — si se despliega manualmente paso a paso (como en la sección 14), **no olvidar correr ese script entre el build y el `wrangler deploy`**, o el Worker quedará sin binding de base de datos funcional.
+
+`.openai/hosting.json`'s `"d1": "DB"` habilita el binding también en `npm run dev` local (Miniflare crea una D1 local vacía — sin las tablas aplicadas; para probar el formulario en local hay que aplicar la migración también contra esa base local, no solo la remota).
 
 ## 5. Rutas públicas
 
@@ -81,8 +121,12 @@ Los contactos abren WhatsApp o el cliente de correo del visitante.
 |---|---|---|
 | `/` | `app/page.tsx` | Portada, portafolio, resumen de servicios, proceso y contacto. |
 | `/servicios` | `app/servicios/page.tsx` | Explicación detallada de servicios. |
+| `/proyecto` | `app/proyecto/page.tsx` | Formulario conversacional de calificación de proyecto (8 pasos, autosave a D1). Ver sección 4B. |
+| `/api/leads`, `/api/leads/[publicId]` | `app/api/leads/` | Backend del formulario anterior. No es una página. |
 
 `app/layout.tsx` define el idioma, metadatos globales, canonical previsto, Open Graph, favicon y la inicialización del tema antes de hidratar React.
+
+**CTAs actualizados en esta iteración:** el pill principal del hero de portada, el "Hablemos" del header/nav móvil, y el enlace secundario del hero de `/servicios` ahora apuntan a `/proyecto` en vez de saltar directo a `#contacto`. WhatsApp y correo siguen disponibles como alternativa directa dentro de la sección de Contacto (`components/bebrand/contact.tsx`) y en la pantalla de agradecimiento al terminar el formulario.
 
 ## 6. Archivos que se editan con mayor frecuencia
 
@@ -97,6 +141,11 @@ Los contactos abren WhatsApp o el cliente de correo del visitante.
 - `lib/services-detail-content.ts`
   - Contenido completo de la página `/servicios`.
   - Lista de prestaciones, resultados y notas aclaratorias.
+- `lib/project-form-steps.ts`
+  - **Todas** las preguntas del formulario de `/proyecto` (8 pasos): texto, tipo de campo, opciones, condicionales (`showIf`), y cuáles son obligatorias.
+  - Editar aquí para agregar/quitar/reordenar preguntas — el wizard se renderiza a partir de este archivo, no hay que tocar componentes para un cambio de copy o de opciones.
+- `lib/leads.ts`
+  - `DEDICATED_ANSWER_KEYS`: qué respuestas también se guardan en su propia columna de la tabla `leads` (para poder filtrarlas/verlas sin parsear JSON). Debe coincidir con los `id` usados en `project-form-steps.ts`.
 
 ### Componentes BeBrand
 
@@ -108,6 +157,8 @@ Los contactos abren WhatsApp o el cliente de correo del visitante.
 - `components/bebrand/service-artwork.tsx`: ilustraciones UI construidas en HTML/CSS para la página detallada.
 - `components/bebrand/process.tsx`: pasos del proceso.
 - `components/bebrand/contact.tsx`: contacto y footer compartidos.
+- `components/bebrand/project-form/project-form.tsx`: wizard del formulario de `/proyecto` — estado, autosave, resumen de sesión, flush por `sendBeacon`. Ver sección 4B.
+- `components/bebrand/project-form/field-renderer.tsx`: renderizador genérico de campos (texto, radio, checkbox, select, textarea) a partir de `lib/project-form-steps.ts`.
 
 ### Diseño
 
@@ -332,10 +383,15 @@ Secuencia explícita que ya fue verificada en este equipo:
 
 ```powershell
 npm run build
+node scripts/apply-d1-binding.mjs
 Set-Location 'C:\Users\USER\Desktop\bebrand-web\dist\server'
 $env:WRANGLER_LOG_PATH='C:/Users/USER/Desktop/bebrand-web/.wrangler/logs'
 node ../../node_modules/wrangler/bin/wrangler.js deploy --config wrangler.json --name bebrand-dev
 ```
+
+**No omitir `node scripts/apply-d1-binding.mjs` entre el build y el `wrangler deploy`** — sin ese paso, `dist/server/wrangler.json` trae un `database_id` placeholder para el binding `DB` y el formulario de `/proyecto` queda sin base de datos funcional en producción (ver sección 4B).
+
+Si falla el `wrangler deploy` a mitad de la subida de assets por un error de red transitorio (`fetch failed`), reintentar la misma secuencia — es seguro, `apply-d1-binding.mjs` es idempotente y Wrangler solo vuelve a subir lo que falte.
 
 Resultado esperado:
 
@@ -348,7 +404,10 @@ Después del despliegue, abrir y verificar expresamente:
 ```text
 https://bebrand-dev.herediadiego963.workers.dev/
 https://bebrand-dev.herediadiego963.workers.dev/servicios
+https://bebrand-dev.herediadiego963.workers.dev/proyecto
 ```
+
+El resumen de despliegue de Wrangler debe listar `env.DB (bebrand-dev-leads) D1 Database` bajo "Your Worker has access to the following bindings" — si no aparece, el binding no se aplicó.
 
 Wrangler necesita una sesión válida de Cloudflare en el equipo. No guardar tokens, claves ni credenciales en este documento o en Git.
 
@@ -388,10 +447,15 @@ Para reducir aprobaciones y pushbacks en sesiones futuras:
 - Se adoptaron los logos transparentes oficiales: versión blanca sobre azul y azul sobre blanco.
 - El footer usa el wordmark `BEBRAND`; el header usa `BEBRAND.dev`.
 - Cloudflare Workers es el proveedor solicitado y usado. No migrar a otra plataforma sin una instrucción explícita.
+- Se eligió Cloudflare D1 (en vez de un servicio externo tipo Airtable/Sheets) para el formulario de `/proyecto` porque ya es el mismo proveedor de despliegue — sin cuenta nueva, con datos consultables y sin dependencia externa. Ver sección 4B.
+- El formulario de `/proyecto` guarda el contacto (nombre/correo/teléfono) en el primer paso, antes de cualquier pregunta de calificación — la prioridad es nunca perder un contacto aunque el visitante abandone el resto.
+- Notificación por correo al recibir un lead nuevo: **no implementada todavía** (no hay proveedor de email transaccional configurado en este proyecto). Revisar leads manualmente en el D1 (sección 4B) hasta que se decida un proveedor.
 
 Commits recientes útiles:
 
 ```text
+b384118 Add conversational project-intake form with autosave to Cloudflare D1
+88d4a04 Add project handoff documentation
 4e8f40b Use supplied BeBrand logos across themes
 9a19ff3 Add detailed services page
 30e44dc Add live website portfolio projects
