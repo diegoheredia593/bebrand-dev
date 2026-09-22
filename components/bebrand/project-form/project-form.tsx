@@ -36,11 +36,25 @@ export function ProjectForm() {
   const [saving, setSaving] = useState(false);
   const [publicId, setPublicId] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState('');
+  const [justSaved, setJustSaved] = useState(false);
 
   const answersRef = useRef(answers);
   const stepIndexRef = useRef(stepIndex);
   const publicIdRef = useRef(publicId);
   const contactBeaconSentRef = useRef(false);
+  const savedFlashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function flashSaved() {
+    setJustSaved(true);
+    if (savedFlashTimeoutRef.current) clearTimeout(savedFlashTimeoutRef.current);
+    savedFlashTimeoutRef.current = setTimeout(() => setJustSaved(false), 1800);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (savedFlashTimeoutRef.current) clearTimeout(savedFlashTimeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     answersRef.current = answers;
@@ -207,6 +221,7 @@ export function ProjectForm() {
         }
         setPublicId(data.publicId);
         setStepIndex(1);
+        flashSaved();
       } catch {
         setErrors({ _global: 'No pudimos guardar tus datos. Revisa tu conexión e inténtalo de nuevo.' });
       } finally {
@@ -239,6 +254,7 @@ export function ProjectForm() {
         setStatus('completed');
       } else {
         setStepIndex(nextStepIndex);
+        flashSaved();
       }
     } catch {
       setErrors({ _global: 'No pudimos guardar tu respuesta. Revisa tu conexión.' });
@@ -290,26 +306,28 @@ export function ProjectForm() {
         <Progress value={progressValue} className="project-form-progress-bar" />
       </div>
 
-      <h2>{step.title}</h2>
-      {step.description && <p className="project-form-description">{step.description}</p>}
+      <div className="project-form-step" key={stepIndex}>
+        <h2>{step.title}</h2>
+        {step.description && <p className="project-form-description">{step.description}</p>}
 
-      <div className="project-form-fields">
-        {visibleFields(step, answers).map((field) => (
-          <FieldRenderer
-            key={field.id}
-            field={field}
-            value={answers[field.id]}
-            onChange={updateAnswer}
-            error={errors[field.id]}
-          />
-        ))}
+        <div className="project-form-fields">
+          {visibleFields(step, answers).map((field) => (
+            <FieldRenderer
+              key={field.id}
+              field={field}
+              value={answers[field.id]}
+              onChange={updateAnswer}
+              error={errors[field.id]}
+            />
+          ))}
+        </div>
+
+        {errors._global && (
+          <p className="field-error project-form-global-error" role="alert">
+            {errors._global}
+          </p>
+        )}
       </div>
-
-      {errors._global && (
-        <p className="field-error project-form-global-error" role="alert">
-          {errors._global}
-        </p>
-      )}
 
       <div className="project-form-nav">
         {stepIndex > 0 && (
@@ -323,7 +341,14 @@ export function ProjectForm() {
         </button>
       </div>
 
-      <p className="project-form-autosave-note">Tus respuestas se guardan automáticamente en cada paso.</p>
+      <p className="project-form-autosave-note">
+        Tus respuestas se guardan automáticamente en cada paso.
+        {justSaved && (
+          <span className="project-form-saved-flash" key={stepIndex}>
+            <CheckCircle2 size={12} aria-hidden="true" /> Guardado
+          </span>
+        )}
+      </p>
 
       {/* Honeypot: hidden from real visitors, some bots still fill it. */}
       <div className="project-form-honeypot" aria-hidden="true">

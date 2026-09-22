@@ -209,14 +209,28 @@
 .project-form-back:hover{opacity:1}
 .project-form .pill{background:var(--blue);color:var(--paper)}
 .project-form .pill:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
-.project-form-autosave-note{font-size:11px;opacity:.6;margin:16px 0 0;text-align:right}
+.project-form-autosave-note{font-size:11px;opacity:.6;margin:16px 0 0;text-align:right;display:flex;justify-content:flex-end;align-items:center;gap:8px}
+.project-form-saved-flash{display:inline-flex;align-items:center;gap:4px;color:#1b9b72;font-weight:600;animation:formSavedFlash 1.8s ease both}
 .project-form-honeypot{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
 .project-form-loading,.project-form-done{align-items:center;text-align:center;gap:8px;display:flex;flex-direction:column;padding:60px 36px}
-.project-form-done svg{color:#1b9b72;margin-bottom:8px}
+.project-form-done{animation:formStepIn .45s cubic-bezier(.16,1,.3,1) both}
+.project-form-done svg{color:#1b9b72;margin-bottom:8px;animation:formCheckPop .5s .1s cubic-bezier(.34,1.56,.64,1) both}
 .project-form-done h2{margin:4px 0}
 .project-form-done p{font-size:15px;line-height:1.6;opacity:.85;max-width:420px;margin:0 0 22px}
 .project-form-progress-bar{background:#204da01f!important}
-.project-form-progress-bar [data-slot=progress-indicator]{background:var(--blue)!important}
+.project-form-progress-bar [data-slot=progress-indicator]{background:var(--blue)!important;transition:width .45s cubic-bezier(.65,0,.35,1)}
+.project-form-step{animation:formStepIn .4s cubic-bezier(.16,1,.3,1) both}
+.field-error{animation:formFieldIn .2s ease both}
+.option-row{transition:background .15s,border-color .15s,transform .15s,box-shadow .15s}
+.option-row:has([data-state=checked]){transform:translateY(-1px);box-shadow:0 3px 10px #204da01a}
+@keyframes formStepIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes formCheckPop{0%{opacity:0;transform:scale(.5)}60%{transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+@keyframes formFieldIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes formSavedFlash{0%{opacity:0}12%{opacity:1}82%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){
+  .project-form-step,.project-form-done,.project-form-done svg,.field-error,.project-form-saved-flash{animation:none!important}
+  .option-row:has([data-state=checked]){transform:none}
+}
 @media(max-width:760px){
   .project-hero{padding-top:26px}
   .project-hero h1{font-size:clamp(34px,10vw,50px);margin:22px 0 16px}
