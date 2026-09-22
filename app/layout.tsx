@@ -1,5 +1,21 @@
 import type { Metadata } from "next";
+import { Manrope, Fraunces } from "next/font/google";
 import "./globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  weight: ["500"],
+  variable: "--font-serif",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "BeBrand — Desarrollo web y software a medida",
@@ -22,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning className={`${manrope.variable} ${fraunces.variable}`}>
       <head><script dangerouslySetInnerHTML={{ __html: "try{document.documentElement.dataset.theme=localStorage.getItem('bebrand-theme')==='light'?'light':'blue'}catch{}" }} /></head>
       <body className="antialiased">{children}</body>
     </html>
